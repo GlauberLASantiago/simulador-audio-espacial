@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Simulador Didático de Áudio Espacial — Mono, Estéreo, Multicanal e Ambisonics</title>
+<title>Do Mono ao Áudio Tridimensional</title>
 <style>
 :root{
   --bg:#08101f;--panel:#121b31;--panel2:#0c1528;--text:#eef3ff;--muted:#aeb9d7;
@@ -18,16 +18,13 @@ body{
   radial-gradient(circle at 92% 4%,rgba(95,224,191,.10),transparent 24%),var(--bg)
 }
 button,select,input{font:inherit}
-a{color:var(--accent2)}
-header{max-width:1240px;margin:auto;padding:28px 22px 12px}
-h1{margin:0;font-size:clamp(1.9rem,3.3vw,3.35rem);letter-spacing:-.045em}
+header{max-width:1180px;margin:auto;padding:30px 22px 16px}
+h1{margin:0;font-size:clamp(2rem,3.4vw,3.4rem);letter-spacing:-.045em}
 .subtitle{color:var(--muted);max-width:930px;line-height:1.6}
 .badges{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
 .badge{padding:8px 11px;border-radius:999px;background:rgba(124,156,255,.10);border:1px solid rgba(124,156,255,.34);font-size:.86rem}
 .badge.good{background:rgba(95,224,191,.10);border-color:rgba(95,224,191,.35)}
-.topnav{max-width:1240px;margin:auto;padding:0 22px 18px;display:flex;gap:8px;flex-wrap:wrap}
-.topnav button{background:#1d2949;border:1px solid var(--line);color:var(--text);padding:9px 12px;border-radius:11px;cursor:pointer}
-main{max-width:1240px;margin:auto;padding:0 22px 34px;display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
+main{max-width:1180px;margin:auto;padding:0 22px 28px;display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
 .card{background:linear-gradient(180deg,rgba(255,255,255,.022),transparent),var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
 .card-head{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}
 .card-head h2,.card-head h3{margin:0;font-size:1.04rem}
@@ -44,28 +41,18 @@ input[type=range],input[type=file],select{width:100%}
 input[type=file],select{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:11px;padding:10px}
 .btn-row{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
 button.action{border:0;border-radius:11px;padding:11px 13px;color:white;background:var(--accent);font-weight:750;cursor:pointer}
-button.secondary{background:#27345d}button.success{background:#178d74}button.danger{background:#8b3041}button.warn{background:#9a641e}
+button.secondary{background:#27345d}button.success{background:#178d74}button.danger{background:#8b3041}
 button:hover{filter:brightness(1.08)}
-.mode-desc,.callout{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--muted);line-height:1.48;font-size:.88rem}
+.mode-desc,.callout{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--muted);line-height:1.52;font-size:.89rem}
 .callout strong{color:var(--text)}
 .presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .presets button{background:#1d2949;border:1px solid var(--line);color:var(--text);padding:9px;border-radius:10px;cursor:pointer;font-size:.84rem}
 .toggle{display:flex;gap:9px;align-items:center;color:var(--muted);font-size:.9rem}
-.section-wide{max-width:1240px;margin:0 auto 20px;padding:0 22px}
-.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.topic{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;min-height:155px}
-.topic h3{margin:0 0 8px;font-size:1rem}
-.topic p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.48}
-.topic button{margin-top:10px;background:transparent;color:var(--accent2);border:0;padding:0;cursor:pointer;font-weight:700}
-.learn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-details{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
-summary{cursor:pointer;font-weight:750}
-details p,details li{color:var(--muted);line-height:1.5;font-size:.88rem}
-table{width:100%;border-collapse:collapse;font-size:.86rem}
-th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}
-th{color:#dce5ff}td{color:var(--muted)}
-.order-box{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
-.order-result{font-size:1.1rem;font-weight:800;color:var(--accent2);white-space:nowrap}
+.section-wide{max-width:1180px;margin:0 auto 20px;padding:0 22px}
+.progression{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.step{background:var(--panel2);border:1px solid var(--line);border-radius:15px;padding:16px}
+.step h3{margin:0 0 8px}.step p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.5}
+.step button{margin-top:12px;background:transparent;border:0;color:var(--accent2);font-weight:750;cursor:pointer;padding:0}
 .helper{position:relative;border-bottom:1px dotted var(--accent2);cursor:help}
 .helper::after{
   content:attr(data-tip);position:absolute;z-index:30;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%);
@@ -73,79 +60,75 @@ th{color:#dce5ff}td{color:var(--muted)}
   padding:10px;font-size:.78rem;line-height:1.4;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.15s
 }
 .helper:hover::after,.helper:focus::after{opacity:1}
-.footer{max-width:1240px;margin:auto;padding:0 22px 35px;color:var(--muted);font-size:.84rem;line-height:1.5}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;place-items:center;padding:20px;z-index:50}
-.modal.open{display:grid}.modal-box{width:min(820px,100%);max-height:85vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
-.modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
-.modal-head h2{margin:0}.close{background:#27345d;color:white;border:0;border-radius:9px;padding:8px 11px;cursor:pointer}
-.glossary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:18px}
-.term{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:11px}
-.term b{display:block;margin-bottom:4px}.term span{color:var(--muted);font-size:.85rem;line-height:1.45}
-@media(max-width:960px){main{grid-template-columns:1fr}.timeline{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:620px){.timeline,.learn-grid,.glossary{grid-template-columns:1fr}.presets{grid-template-columns:repeat(2,1fr)}}
+.fund-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}
+th{color:#dce5ff}td{color:var(--muted)}
+.order-box{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.order-result{font-size:1.1rem;font-weight:800;color:var(--accent2);white-space:nowrap}
+.note{max-width:1180px;margin:0 auto 38px;padding:0 22px}
+.note .card-body{line-height:1.62;color:var(--muted)}
+.note strong{color:var(--text)}
+.note ul{margin-bottom:0}
+@media(max-width:900px){main{grid-template-columns:1fr}.progression,.fund-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.presets{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <header>
-  <h1>Simulador Didático de Áudio Espacial</h1>
+  <h1>Do Mono ao Áudio Tridimensional</h1>
   <p class="subtitle">
-    Uma ponte prática entre os conteúdos do TCC: do <span class="helper" tabindex="0" data-tip="Som reproduzido sem diferenciação espacial entre canais.">mono</span>
-    e do <span class="helper" tabindex="0" data-tip="Imagem sonora formada por diferenças entre os canais esquerdo e direito.">estéreo</span>
-    aos sistemas multicanais, à espacialização tridimensional e aos fundamentos de
-    <span class="helper" tabindex="0" data-tip="Sistema de representação de uma cena sonora por componentes matemáticos do campo acústico.">Ambisonics</span>.
+    Aplicação didática para comparar <span class="helper" tabindex="0" data-tip="Um mesmo conteúdo sonoro sem diferenciação espacial entre canais.">mono</span>,
+    <span class="helper" tabindex="0" data-tip="Imagem lateral construída entre os canais esquerdo e direito.">estéreo</span>
+    e <span class="helper" tabindex="0" data-tip="Representação sonora com direção horizontal, vertical e profundidade.">espacialização tridimensional</span>,
+    introduzindo os fundamentos de Ambisonics.
   </p>
   <div class="badges">
-    <span class="badge good">🎧 Recomenda-se o uso de fones</span>
-    <span class="badge">Web Audio API</span>
-    <span class="badge">Recurso educacional</span>
-    <span class="badge">Sem instalação</span>
+    <span class="badge good">🎧 Use fones de ouvido</span>
+    <span class="badge">Comparação auditiva</span>
+    <span class="badge">Fundamentos de Ambisonics</span>
   </div>
 </header>
 
-<nav class="topnav">
-  <button onclick="go('simulacao')">Simulação</button>
-  <button onclick="go('percurso')">Percurso do TCC</button>
-  <button onclick="go('conceitos')">Conceitos e comparações</button>
-  <button onclick="openGlossary()">Glossário</button>
-</nav>
-
-<main id="simulacao">
+<main>
 <section class="card">
   <div class="card-head"><h2>Campo sonoro interativo</h2><div class="status" id="status">Pronto</div></div>
-  <div class="stage-wrap"><canvas id="stage" width="700" height="700" aria-label="Mapa interativo de posicionamento sonoro"></canvas></div>
-  <div class="card-body controls">
+  <div class="stage-wrap"><canvas id="stage" width="700" height="700"></canvas></div>
+  <div class="card-body">
     <div class="metrics">
-      <div class="metric"><b id="azRead">0°</b><span class="helper" data-tip="Ângulo horizontal da fonte em relação à frente do ouvinte.">Azimute</span></div>
-      <div class="metric"><b id="elRead">0°</b><span class="helper" data-tip="Ângulo vertical: valores positivos sugerem fonte acima; negativos, abaixo.">Elevação</span></div>
-      <div class="metric"><b id="distRead">2,0 m</b><span class="helper" data-tip="A distância altera o nível e os indícios de proximidade na simulação.">Distância</span></div>
-    </div>
-    <div class="callout" id="lesson">
-      <strong>Ponte conceitual:</strong> arraste a fonte no plano para perceber como uma posição sonora pode ser descrita por azimute e distância. Use o controle de elevação para acrescentar o eixo vertical.
+      <div class="metric"><b id="azRead">0°</b><span>Azimute</span></div>
+      <div class="metric"><b id="elRead">0°</b><span>Elevação</span></div>
+      <div class="metric"><b id="distRead">2,0 m</b><span>Distância</span></div>
     </div>
   </div>
 </section>
 
 <aside class="controls">
 <section class="card">
-  <div class="card-head"><h2>1. Fonte e modo</h2></div>
+  <div class="card-head"><h2>1. Fonte sonora</h2></div>
   <div class="card-body controls">
     <input type="file" id="fileInput" accept="audio/*">
     <div class="btn-row">
       <button class="action secondary" id="demoBtn">Usar som de teste</button>
       <button class="action danger" id="clearBtn">Limpar áudio</button>
     </div>
-    <label class="row"><span>Modo de reprodução</span></label>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>2. Comparação</h2></div>
+  <div class="card-body controls">
     <select id="mode">
-      <option value="mono">Mono central</option>
-      <option value="stereo">Panorama estéreo</option>
-      <option value="spatial" selected>Espacial binaural — HRTF</option>
+      <option value="mono">1 — Mono</option>
+      <option value="stereo">2 — Estéreo</option>
+      <option value="spatial" selected>3 — Espacialização tridimensional</option>
     </select>
     <div class="mode-desc" id="modeDesc"></div>
   </div>
 </section>
 
 <section class="card">
-  <div class="card-head"><h2>2. Transporte</h2></div>
+  <div class="card-head"><h2>3. Reprodução</h2></div>
   <div class="card-body controls">
     <div class="btn-row">
       <button class="action" id="playBtn">▶ Reproduzir</button>
@@ -157,14 +140,14 @@ th{color:#dce5ff}td{color:var(--muted)}
 </section>
 
 <section class="card">
-  <div class="card-head"><h2>3. Posição e demonstrações</h2></div>
+  <div class="card-head"><h2>4. Posição da fonte</h2></div>
   <div class="card-body controls">
     <div>
-      <label class="row"><span class="helper" data-tip="No estéreo, o azimute é aproximado pelo panorama; no modo binaural, integra a posição 3D.">Azimute</span><strong id="azLabel">0°</strong></label>
+      <label class="row"><span>Azimute</span><strong id="azLabel">0°</strong></label>
       <input id="azimuth" type="range" min="-180" max="180" value="0">
     </div>
     <div>
-      <label class="row"><span class="helper" data-tip="A elevação não existe em um panorama estéreo convencional, mas integra a espacialização tridimensional.">Elevação</span><strong id="elLabel">0°</strong></label>
+      <label class="row"><span>Elevação</span><strong id="elLabel">0°</strong></label>
       <input id="elevation" type="range" min="-60" max="60" value="0">
     </div>
     <div>
@@ -192,84 +175,44 @@ th{color:#dce5ff}td{color:var(--muted)}
 </aside>
 </main>
 
-<section class="section-wide" id="percurso">
+<section class="section-wide">
   <div class="card">
-    <div class="card-head"><h2>Percurso técnico-conceitual do TCC</h2></div>
+    <div class="card-head"><h2>Progressão didática</h2></div>
     <div class="card-body">
-      <div class="timeline">
-        <article class="topic">
-          <h3>1. Mono e estéreo</h3>
-          <p>Compare um sinal central com a imagem lateral formada pelos canais esquerdo e direito. Observe o centro fantasma e o panorama.</p>
-          <button onclick="setLesson('mono')">Aplicar na simulação</button>
+      <div class="progression">
+        <article class="step">
+          <h3>1. Mono</h3>
+          <p>O sinal é percebido no centro, sem deslocamento lateral. Serve como ponto de partida para compreender a ausência de imagem espacial entre canais.</p>
+          <button onclick="selectMode('mono')">Ouvir em mono</button>
         </article>
-        <article class="topic">
-          <h3>2. Captação sonora</h3>
-          <p>Padrões polares e arranjos AB, XY, MS, ORTF, DIN e NOS moldam diferenças de nível, tempo, fase e ambiência.</p>
-          <button onclick="showCapture()">Ver ponte didática</button>
+        <article class="step">
+          <h3>2. Estéreo</h3>
+          <p>O som pode ser deslocado entre esquerda e direita. Surge a imagem estereofônica, mas ainda sem uma representação completa de altura e profundidade.</p>
+          <button onclick="selectMode('stereo')">Ouvir em estéreo</button>
         </article>
-        <article class="topic">
-          <h3>3. Multicanal</h3>
-          <p>Quadrifonia, octafonia e surround distribuem sinais para canais e alto-falantes definidos. A imersão depende do layout e da reprodução.</p>
-          <button onclick="showMultichannel()">Ver comparação</button>
-        </article>
-        <article class="topic">
-          <h3>4. Ambisonics</h3>
-          <p>Representa a cena sonora de forma independente do layout final, permitindo diferentes decodificações, inclusive binaural.</p>
-          <button onclick="setLesson('ambi')">Aplicar na simulação</button>
+        <article class="step">
+          <h3>3. Tridimensional</h3>
+          <p>A fonte passa a ser descrita por azimute, elevação e distância. Essa lógica prepara a compreensão de sistemas de representação espacial como Ambisonics.</p>
+          <button onclick="selectMode('spatial')">Ouvir em 3D</button>
         </article>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section-wide" id="conceitos">
-  <div class="learn-grid">
+<section class="section-wide">
+  <div class="fund-grid">
     <section class="card">
-      <div class="card-head"><h3>Captação: padrões e arranjos</h3></div>
-      <div class="card-body controls">
-        <details>
-          <summary>Padrões polares</summary>
-          <p><strong>Omnidirecional:</strong> capta em todas as direções. <strong>Cardioide:</strong> privilegia a frente. <strong>Bidirecional:</strong> capta frente e trás, rejeitando as laterais.</p>
-        </details>
-        <details>
-          <summary>Coincidentes: XY e MS</summary>
-          <p>As cápsulas ficam praticamente no mesmo ponto. A imagem depende principalmente de diferenças de nível, com boa compatibilidade mono. No MS, a largura pode ser ajustada depois da gravação.</p>
-        </details>
-        <details>
-          <summary>Não coincidente: AB</summary>
-          <p>Microfones espaçados registram diferenças de tempo de chegada e intensidade. Produzem sensação de largura e profundidade, mas exigem atenção à fase.</p>
-        </details>
-        <details>
-          <summary>Quase coincidentes: ORTF, DIN e NOS</summary>
-          <p>Combinam espaçamento e angulação, aproximando indícios de ILD e ITD presentes na audição humana.</p>
-        </details>
-        <div class="callout"><strong>Limite da simulação:</strong> o app espacializa uma fonte já gravada. Ele não reproduz fisicamente as diferenças geradas por cada arranjo de microfonação; essas devem ser demonstradas com gravações comparativas.</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-head"><h3>Analógico, digital e DAW</h3></div>
+      <div class="card-head"><h3>Fundamentos de Ambisonics</h3></div>
       <div class="card-body">
         <table>
-          <tr><th>Aspecto</th><th>Analógico</th><th>Digital</th></tr>
-          <tr><td>Registro</td><td>Variações contínuas em suporte físico</td><td>Amostras e valores numéricos</td></tr>
-          <tr><td>Edição</td><td>Processos físicos e eletroeletrônicos</td><td>Edição não destrutiva e automação em software</td></tr>
-          <tr><td>Limitações</td><td>Ruído, desgaste, distorção e manutenção</td><td>Conversão, resolução, processamento e configuração</td></tr>
+          <tr><th>Conceito</th><th>Explicação</th></tr>
+          <tr><td>Cena sonora</td><td>O campo sonoro é representado como uma cena completa, e não apenas como sinais destinados diretamente a alto-falantes específicos.</td></tr>
+          <tr><td>Harmônicos esféricos</td><td>Funções matemáticas usadas para decompor e representar a distribuição espacial do som.</td></tr>
+          <tr><td>Formato A</td><td>Sinais brutos obtidos das cápsulas de um microfone ambisônico.</td></tr>
+          <tr><td>Formato B</td><td>Representação do campo sonoro em componentes Ambisonics.</td></tr>
+          <tr><td>Decodificação</td><td>Conversão da cena para um sistema de reprodução, como alto-falantes ou saída binaural em fones.</td></tr>
         </table>
-        <div class="callout"><strong>Ponte com o Reaper:</strong> uma DAW permite roteamento, automação, codificação e monitoramento. O app usa a Web Audio API como equivalente simplificado de uma cadeia digital.</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-head"><h3>Multicanal, cena e decodificação</h3></div>
-      <div class="card-body">
-        <table>
-          <tr><th>Modelo</th><th>Ideia principal</th></tr>
-          <tr><td>Baseado em canais</td><td>O conteúdo é preparado para posições de reprodução definidas, como 5.1 ou 7.1.</td></tr>
-          <tr><td>Baseado em objetos</td><td>Fontes recebem metadados de posição e são renderizadas conforme o sistema.</td></tr>
-          <tr><td>Baseado em cena</td><td>A cena é representada globalmente; Ambisonics é o exemplo central do TCC.</td></tr>
-        </table>
-        <div class="callout"><strong>Atenção:</strong> quatro componentes FOA não significam quatro alto-falantes. Componentes Ambisonics, canais do arquivo e saídas físicas são conceitos diferentes.</div>
       </div>
     </section>
 
@@ -284,66 +227,46 @@ th{color:#dce5ff}td{color:var(--muted)}
           <div class="order-result" id="orderResult">4 componentes</div>
         </div>
         <div class="callout">
-          Em Ambisonics tridimensional, a quantidade de componentes é <strong>(N + 1)²</strong>. A ordem aumenta a resolução espacial, mas também eleva o número de canais e o custo de processamento.
+          Em Ambisonics tridimensional, a quantidade de componentes é <strong>(N + 1)²</strong>. Ordens maiores aumentam a resolução espacial, mas também exigem mais canais e processamento.
         </div>
         <table>
-          <tr><th>Convenção</th><th>Uso resumido</th></tr>
-          <tr><td>FuMa</td><td>Convenção histórica, associada sobretudo a fluxos antigos de primeira ordem.</td></tr>
-          <tr><td>AmbiX</td><td>Usa ordenação ACN e, em geral, normalização SN3D.</td></tr>
-          <tr><td>SN3D / N3D / MaxN</td><td>Normalizações que definem a escala dos componentes; precisam ser compatíveis em toda a cadeia.</td></tr>
+          <tr><th>Termo</th><th>Função</th></tr>
+          <tr><td>FOA</td><td>Ambisonics de primeira ordem.</td></tr>
+          <tr><td>HOA</td><td>Ambisonics de ordens superiores.</td></tr>
+          <tr><td>ACN</td><td>Convenção de ordenação dos componentes.</td></tr>
+          <tr><td>SN3D / N3D</td><td>Convenções de normalização.</td></tr>
         </table>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-head"><h3>Formato A e Formato B</h3></div>
-      <div class="card-body">
-        <details open>
-          <summary>Formato A</summary>
-          <p>Sinais brutos das cápsulas de um microfone ambisônico. A geometria e a calibração dependem do modelo do microfone.</p>
-        </details>
-        <details>
-          <summary>Formato B</summary>
-          <p>Representação do campo sonoro em componentes Ambisonics. Pode resultar da conversão do Formato A ou ser sintetizada por codificadores de fontes mono e estéreo.</p>
-        </details>
-        <div class="callout"><strong>No app:</strong> não há conversão real de Formato A para B. A fonte mono é posicionada diretamente por um panner binaural, funcionando como analogia introdutória à etapa de codificação e renderização.</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-head"><h3>Pontes com a suíte IEM</h3></div>
-      <div class="card-body">
-        <table>
-          <tr><th>Recurso do TCC</th><th>Correspondência didática no app</th></tr>
-          <tr><td>StereoEncoder</td><td>Controles de azimute, elevação e distância da fonte.</td></tr>
-          <tr><td>EnergyVisualizer</td><td>Mapa gráfico da posição e trajetória sonora.</td></tr>
-          <tr><td>AllRADecoder</td><td>Não implementado; o app não calcula um layout físico de alto-falantes.</td></tr>
-          <tr><td>BinauralDecoder</td><td>Modo espacial com HRTF da Web Audio API.</td></tr>
-          <tr><td>Automação</td><td>Órbita automática de 360° e presets direcionais.</td></tr>
-        </table>
-        <div class="callout"><strong>Uso acadêmico recomendado:</strong> o app pode acompanhar um exemplo autoral produzido no Reaper/IEM, mas não deve ser apresentado como substituto de uma implementação Ambisonics completa.</div>
       </div>
     </section>
   </div>
 </section>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="modal-box">
-    <div class="modal-head"><h2 id="modalTitle">Glossário</h2><button class="close" onclick="closeModal()">Fechar</button></div>
-    <div id="modalContent"></div>
+<section class="note">
+  <div class="card">
+    <div class="card-head"><h2>Nota técnica: o que esta aplicação faz e o que ela não faz</h2></div>
+    <div class="card-body">
+      <p><strong>Esta aplicação realiza uma simulação binaural tridimensional, mas não implementa uma cadeia Ambisonics completa.</strong></p>
+      <p>O modo tridimensional utiliza o recurso <em>PannerNode</em> da Web Audio API, com processamento HRTF. Isso permite posicionar uma fonte virtual em torno do ouvinte e gerar uma saída estéreo para fones, simulando direção, elevação e distância.</p>
+      <p>Uma implementação Ambisonics completa exigiria etapas adicionais:</p>
+      <ul>
+        <li>codificar a fonte em componentes baseados em harmônicos esféricos;</li>
+        <li>definir ordem, ordenação e normalização, como ACN/SN3D;</li>
+        <li>processar vários canais simultaneamente;</li>
+        <li>aplicar uma matriz de decodificação para alto-falantes ou filtros binaurais específicos;</li>
+        <li>utilizar conjuntos de HRTFs ou arquivos SOFA adequados à decodificação binaural;</li>
+        <li>garantir compatibilidade entre codificador, processadores e decodificador.</li>
+      </ul>
+      <p><strong>Por que essa limitação existe?</strong> A Web Audio API oferece espacialização binaural pronta para fontes pontuais, mas não fornece nativamente um codificador e um decodificador Ambisonics completos. Para isso, seria necessário incorporar uma biblioteca especializada ou desenvolver processamento digital próprio, normalmente com Web Audio Worklets, matrizes multicanais e filtros de convolução.</p>
+      <p>Portanto, o app é adequado para ensinar a passagem conceitual do mono ao estéreo e à espacialização tridimensional. Ele introduz a lógica espacial que ajuda a compreender Ambisonics, mas não deve ser apresentado como um processador Ambisonics profissional.</p>
+    </div>
   </div>
-</div>
-
-<div class="footer">
-  <strong>Nota técnica:</strong> esta aplicação é uma simulação pedagógica. O modo espacial utiliza um <em>PannerNode</em> com HRTF da Web Audio API.
-  Ele demonstra direção, elevação aproximada e distância, mas não implementa harmônicos esféricos, codificação ACN/SN3D, ordens Ambisonics nem decodificação AllRAD.
-</div>
+</section>
 
 <script>
 (()=>{
 let ctx,sourceNode=null,buffer=null,gain,stereoPanner,panner,startedAt=0,pauseOffset=0,playing=false,orbiting=false,orbitFrame,lastOrbitTime,demoMode=false,demoOsc=null;
 const $=id=>document.getElementById(id);
-const E={file:$('fileInput'),demo:$('demoBtn'),clear:$('clearBtn'),mode:$('mode'),modeDesc:$('modeDesc'),play:$('playBtn'),pause:$('pauseBtn'),stop:$('stopBtn'),loop:$('loop'),az:$('azimuth'),el:$('elevation'),dist:$('distance'),speed:$('speed'),orbit:$('orbitBtn'),reset:$('resetBtn'),stage:$('stage'),status:$('status'),azL:$('azLabel'),elL:$('elLabel'),distL:$('distLabel'),speedL:$('speedLabel'),azR:$('azRead'),elR:$('elRead'),distR:$('distRead'),lesson:$('lesson')};
+const E={file:$('fileInput'),demo:$('demoBtn'),clear:$('clearBtn'),mode:$('mode'),modeDesc:$('modeDesc'),play:$('playBtn'),pause:$('pauseBtn'),stop:$('stopBtn'),loop:$('loop'),az:$('azimuth'),el:$('elevation'),dist:$('distance'),speed:$('speed'),orbit:$('orbitBtn'),reset:$('resetBtn'),stage:$('stage'),status:$('status'),azL:$('azLabel'),elL:$('elLabel'),distL:$('distLabel'),speedL:$('speedLabel'),azR:$('azRead'),elR:$('elRead'),distR:$('distRead')};
 
 function init(){
  if(ctx)return;
@@ -385,9 +308,9 @@ function stop(){stopNode();playing=false;pauseOffset=0;E.status.textContent='Par
 async function load(file){init();stop();demoMode=false;buffer=await ctx.decodeAudioData(await file.arrayBuffer());E.status.textContent='Áudio carregado: '+file.name}
 function updateMode(){
  const d={
-  mono:'<strong>Mono:</strong> o sinal permanece central. Serve para discutir ausência de diferenciação lateral e compatibilidade.',
-  stereo:'<strong>Estéreo:</strong> o azimute controla o panorama entre esquerda e direita. Elevação e posição traseira não são reproduzidas como em 3D.',
-  spatial:'<strong>Binaural/HRTF:</strong> a posição 3D é renderizada para dois canais de fone, aproximando indícios de direção e distância.'
+  mono:'<strong>Mono:</strong> o sinal permanece central e não há imagem lateral independente.',
+  stereo:'<strong>Estéreo:</strong> o azimute controla o panorama entre esquerda e direita. A elevação não é representada de forma completa.',
+  spatial:'<strong>Espacialização tridimensional:</strong> a fonte é posicionada por azimute, elevação e distância e renderizada binauralmente para fones.'
  };E.modeDesc.innerHTML=d[E.mode.value];
 }
 function updatePos(){
@@ -426,45 +349,9 @@ updateMode();updatePos();
 
 const order=$('order'),orderLabel=$('orderLabel'),orderResult=$('orderResult');
 function calcOrder(){const n=+order.value;orderLabel.textContent=n;orderResult.textContent=((n+1)*(n+1))+' componentes'}order.oninput=calcOrder;calcOrder();
-})();
 
-function go(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
-function setLesson(kind){
- const l=document.getElementById('lesson'),m=document.getElementById('mode');
- if(kind==='mono'){m.value='mono';m.dispatchEvent(new Event('change'));l.innerHTML='<strong>Atividade:</strong> ouça o sinal em mono. Depois selecione estéreo e mova a fonte para comparar o centro com as posições laterais.'}
- if(kind==='ambi'){m.value='spatial';m.dispatchEvent(new Event('change'));l.innerHTML='<strong>Atividade:</strong> ative a órbita de 360°, altere a elevação e compare frente, trás, cima e proximidade. Esta é uma analogia binaural, não uma codificação Ambisonics completa.'}
- go('simulacao');
-}
-function openModal(title,html){document.getElementById('modalTitle').textContent=title;document.getElementById('modalContent').innerHTML=html;document.getElementById('modal').classList.add('open')}
-function closeModal(){document.getElementById('modal').classList.remove('open')}
-function showCapture(){openModal('Captação e imagem estéreo',`<div class="glossary">
-<div class="term"><b>AB</b><span>Par espaçado; explora diferenças de tempo e nível.</span></div>
-<div class="term"><b>XY</b><span>Par coincidente; localização sobretudo por diferenças de nível.</span></div>
-<div class="term"><b>MS</b><span>Canal central e lateral; largura ajustável após a gravação.</span></div>
-<div class="term"><b>ORTF / DIN / NOS</b><span>Pares quase coincidentes; combinam espaçamento e angulação.</span></div>
-</div><div class="card-body callout"><strong>Sugestão:</strong> acrescente ao repositório gravações reais do mesmo evento em diferentes arranjos. O app sozinho não simula a acústica e a fase específicas dessas técnicas.</div>`)}
-function showMultichannel(){openModal('Do multicanal ao áudio baseado em cena',`<div class="card-body">
-<table><tr><th>Sistema</th><th>Exemplo</th><th>Característica</th></tr>
-<tr><td>Mono</td><td>1 canal</td><td>Sem imagem lateral independente</td></tr>
-<tr><td>Estéreo</td><td>2 canais</td><td>Imagem entre esquerda e direita</td></tr>
-<tr><td>Multicanal</td><td>Quad, 5.1, 7.1, octafonia</td><td>Distribuição para posições de alto-falantes</td></tr>
-<tr><td>Ambisonics</td><td>FOA / HOA</td><td>Representação da cena e decodificação posterior</td></tr></table>
-</div>`)}
-function openGlossary(){openModal('Glossário essencial',`<div class="glossary">
-<div class="term"><b>ILD</b><span>Diferença interaural de nível.</span></div>
-<div class="term"><b>ITD</b><span>Diferença interaural de tempo.</span></div>
-<div class="term"><b>HRTF</b><span>Resposta relacionada à cabeça, usada para renderização binaural.</span></div>
-<div class="term"><b>FOA</b><span>Ambisonics de primeira ordem.</span></div>
-<div class="term"><b>HOA</b><span>Ambisonics de ordens superiores.</span></div>
-<div class="term"><b>ACN</b><span>Ordenação de canais Ambisonics.</span></div>
-<div class="term"><b>SN3D / N3D</b><span>Convenções de normalização dos componentes.</span></div>
-<div class="term"><b>Formato A</b><span>Sinais brutos das cápsulas de um microfone ambisônico.</span></div>
-<div class="term"><b>Formato B</b><span>Componentes que representam matematicamente o campo sonoro.</span></div>
-<div class="term"><b>VBAP</b><span>Panorama vetorial por amplitude para pares ou tríades de alto-falantes.</span></div>
-<div class="term"><b>AllRAD</b><span>Método de decodificação que combina malha virtual e redistribuição para o layout real.</span></div>
-<div class="term"><b>Centro fantasma</b><span>Fonte percebida entre dois alto-falantes que reproduzem sinais adequadamente relacionados.</span></div>
-</div>`)}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+window.selectMode=(m)=>{E.mode.value=m;route();document.querySelector('main').scrollIntoView({behavior:'smooth'})};
+})();
 </script>
 </body>
 </html>
