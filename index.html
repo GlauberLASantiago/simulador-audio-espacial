@@ -155,7 +155,22 @@ th{color:#dce5ff}td{color:var(--muted)}
       <input id="distance" type="range" min=".5" max="8" step=".1" value="2">
     </div>
     <div>
-      <label class="row"><span>Velocidade da órbita</span><strong id="speedLabel">20°/s</strong></label>
+      <label class="row"><span>Tipo de órbita</span></label>
+      <select id="orbitType">
+        <option value="horizontal">1 — Horizontal 360°</option>
+        <option value="verticalFront">2 — Vertical frontal</option>
+        <option value="verticalSide">3 — Vertical lateral</option>
+        <option value="diagonal">4 — Diagonal inclinada</option>
+        <option value="figure8">5 — Figura de oito</option>
+        <option value="helix">6 — Hélice com elevação</option>
+        <option value="ellipse">7 — Elipse com distância variável</option>
+      </select>
+    </div>
+    <div>
+      <label class="row">
+        <span>Velocidade da órbita</span>
+        <strong><span id="speedLabel">20°/s</span> · <span id="cycleLabel">18,0 s/volta</span></strong>
+      </label>
       <input id="speed" type="range" min="5" max="120" step="5" value="20">
     </div>
     <div class="presets">
@@ -167,8 +182,12 @@ th{color:#dce5ff}td{color:var(--muted)}
       <button data-preset="near">Próximo</button>
     </div>
     <div class="btn-row">
-      <button class="action success" id="orbitBtn">Órbita 360°</button>
+      <button class="action success" id="orbitBtn">Iniciar órbita</button>
       <button class="action secondary" id="resetBtn">Centralizar</button>
+    </div>
+    <div class="callout">
+      <strong>Velocidade verificada:</strong> o valor em graus por segundo controla a fase de todas as trajetórias. 
+      Por exemplo, 20°/s completa um ciclo em 18 segundos; 60°/s completa em 6 segundos.
     </div>
   </div>
 </section>
@@ -266,7 +285,7 @@ th{color:#dce5ff}td{color:var(--muted)}
 (()=>{
 let ctx,sourceNode=null,buffer=null,gain,stereoPanner,panner,startedAt=0,pauseOffset=0,playing=false,orbiting=false,orbitFrame,lastOrbitTime,demoMode=false,demoOsc=null;
 const $=id=>document.getElementById(id);
-const E={file:$('fileInput'),demo:$('demoBtn'),clear:$('clearBtn'),mode:$('mode'),modeDesc:$('modeDesc'),play:$('playBtn'),pause:$('pauseBtn'),stop:$('stopBtn'),loop:$('loop'),az:$('azimuth'),el:$('elevation'),dist:$('distance'),speed:$('speed'),orbit:$('orbitBtn'),reset:$('resetBtn'),stage:$('stage'),status:$('status'),azL:$('azLabel'),elL:$('elLabel'),distL:$('distLabel'),speedL:$('speedLabel'),azR:$('azRead'),elR:$('elRead'),distR:$('distRead')};
+const E={file:$('fileInput'),demo:$('demoBtn'),clear:$('clearBtn'),mode:$('mode'),modeDesc:$('modeDesc'),play:$('playBtn'),pause:$('pauseBtn'),stop:$('stopBtn'),loop:$('loop'),az:$('azimuth'),el:$('elevation'),dist:$('distance'),speed:$('speed'),orbitType:$('orbitType'),cycleL:$('cycleLabel'),orbit:$('orbitBtn'),reset:$('resetBtn'),stage:$('stage'),status:$('status'),azL:$('azLabel'),elL:$('elLabel'),distL:$('distLabel'),speedL:$('speedLabel'),azR:$('azRead'),elR:$('elRead'),distR:$('distRead')};
 
 function init(){
  if(ctx)return;
@@ -319,7 +338,7 @@ function updatePos(){
  if(stereoPanner)stereoPanner.pan.value=Math.max(-1,Math.min(1,az/90));
  if(panner){if(panner.positionX){panner.positionX.value=x;panner.positionY.value=y;panner.positionZ.value=z}else panner.setPosition(x,y,z)}
  E.azL.textContent=E.azR.textContent=Math.round(az)+'°';E.elL.textContent=E.elR.textContent=Math.round(el)+'°';
- E.distL.textContent=E.distR.textContent=d.toFixed(1).replace('.',',')+' m';E.speedL.textContent=E.speed.value+'°/s';draw();
+ E.distL.textContent=E.distR.textContent=d.toFixed(1).replace('.',',')+' m';E.speedL.textContent=E.speed.value+'°/s';E.cycleL.textContent=(360/Math.max(1,+E.speed.value)).toFixed(1).replace('.',',')+' s/volta';draw();
 }
 function draw(){
  const c=E.stage,g=c.getContext('2d'),w=c.width,h=c.height,cx=w/2,cy=h/2;g.clearRect(0,0,w,h);
@@ -333,8 +352,90 @@ function draw(){
  const grd=g.createRadialGradient(x,y,2,x,y,44);grd.addColorStop(0,'rgba(95,224,191,.95)');grd.addColorStop(1,'rgba(95,224,191,0)');g.fillStyle=grd;g.beginPath();g.arc(x,y,44,0,Math.PI*2);g.fill();
  g.fillStyle=el>=0?'#5fe0bf':'#ffbf69';g.beginPath();g.arc(x,y,size,0,Math.PI*2);g.fill();g.fillStyle='#08101f';g.font='bold 14px system-ui';g.fillText(Math.round(el)+'°',x,y+5);
 }
-function orbitStep(t){if(!orbiting)return;const dt=(t-lastOrbitTime)/1000;lastOrbitTime=t;let a=+E.az.value+(+E.speed.value)*dt;if(a>180)a-=360;E.az.value=a;updatePos();orbitFrame=requestAnimationFrame(orbitStep)}
-function toggleOrbit(){orbiting=!orbiting;E.orbit.textContent=orbiting?'Parar órbita':'Órbita 360°';E.orbit.className='action '+(orbiting?'danger':'success');if(orbiting){lastOrbitTime=performance.now();orbitFrame=requestAnimationFrame(orbitStep)}else cancelAnimationFrame(orbitFrame)}
+let orbitPhase=0;
+
+function setFromCartesian(x,y,z){
+  const d=Math.max(.5,Math.min(8,Math.sqrt(x*x+y*y+z*z)));
+  const az=Math.atan2(x,-z)*180/Math.PI;
+  const el=Math.asin(Math.max(-1,Math.min(1,y/d)))*180/Math.PI;
+  E.az.value=Math.max(-180,Math.min(180,az));
+  E.el.value=Math.max(-60,Math.min(60,el));
+  E.dist.value=d;
+}
+
+function applyOrbit(type,phaseDeg){
+  const t=phaseDeg*Math.PI/180;
+  const base=2.2;
+
+  if(type==='horizontal'){
+    E.az.value=((phaseDeg+180)%360)-180;
+    E.el.value=0;
+    E.dist.value=base;
+  }
+  else if(type==='verticalFront'){
+    // Plano sagital: frente → acima → trás → abaixo.
+    setFromCartesian(0, base*Math.sin(t), -base*Math.cos(t));
+  }
+  else if(type==='verticalSide'){
+    // Plano coronal: direita → acima → esquerda → abaixo.
+    setFromCartesian(base*Math.cos(t), base*Math.sin(t), 0);
+  }
+  else if(type==='diagonal'){
+    // Círculo em plano inclinado em aproximadamente 45°.
+    const x=base*Math.cos(t);
+    const y=(base/Math.sqrt(2))*Math.sin(t);
+    const z=-(base/Math.sqrt(2))*Math.sin(t);
+    setFromCartesian(x,y,z);
+  }
+  else if(type==='figure8'){
+    // Trajetória em oito: movimento horizontal com cruzamento central e elevação alternada.
+    E.az.value=125*Math.sin(t);
+    E.el.value=42*Math.sin(2*t);
+    E.dist.value=base;
+  }
+  else if(type==='helix'){
+    // Giro completo enquanto sobe e desce suavemente.
+    E.az.value=((phaseDeg+180)%360)-180;
+    E.el.value=48*Math.sin(t/2);
+    E.dist.value=base;
+  }
+  else if(type==='ellipse'){
+    // Órbita elíptica com variação simultânea de elevação e distância.
+    E.az.value=((phaseDeg+180)%360)-180;
+    E.el.value=28*Math.sin(t);
+    E.dist.value=2.4+1.15*Math.cos(t);
+  }
+
+  updatePos();
+}
+
+function orbitStep(now){
+  if(!orbiting)return;
+  const dt=(now-lastOrbitTime)/1000;
+  lastOrbitTime=now;
+
+  // O controle de velocidade define quantos graus de fase são percorridos por segundo.
+  orbitPhase=(orbitPhase+(+E.speed.value)*dt)%360;
+  applyOrbit(E.orbitType.value,orbitPhase);
+
+  orbitFrame=requestAnimationFrame(orbitStep);
+}
+
+function toggleOrbit(){
+  orbiting=!orbiting;
+  E.orbit.textContent=orbiting?'Parar órbita':'Iniciar órbita';
+  E.orbit.className='action '+(orbiting?'danger':'success');
+
+  if(orbiting){
+    lastOrbitTime=performance.now();
+    orbitFrame=requestAnimationFrame(orbitStep);
+    E.status.textContent='Órbita ativa: '+E.orbitType.options[E.orbitType.selectedIndex].text;
+  }else{
+    cancelAnimationFrame(orbitFrame);
+    E.status.textContent='Órbita interrompida';
+  }
+}
+
 function preset(p){const map={front:[0,0,2],left:[-90,0,2],right:[90,0,2],back:[180,0,2],above:[0,55,2],near:[0,0,.6]};[E.az.value,E.el.value,E.dist.value]=map[p];updatePos()}
 let dragging=false;
 function pointer(e){const r=E.stage.getBoundingClientRect(),x=(e.clientX-r.left)*E.stage.width/r.width,y=(e.clientY-r.top)*E.stage.height/r.height,dx=x-E.stage.width/2,dy=E.stage.height/2-y;E.az.value=Math.atan2(dx,dy)*180/Math.PI;E.dist.value=Math.max(.5,Math.min(8,(Math.sqrt(dx*dx+dy*dy)-45)/235*8));updatePos()}
@@ -343,7 +444,7 @@ E.file.onchange=e=>e.target.files[0]&&load(e.target.files[0]).catch(()=>E.status
 E.demo.onclick=()=>{init();stop();demoMode=true;buffer=null;E.file.value='';E.status.textContent='Som de teste selecionado'};
 E.clear.onclick=()=>{stop();buffer=null;demoMode=false;E.file.value='';E.status.textContent='Áudio removido'};
 E.play.onclick=play;E.pause.onclick=pause;E.stop.onclick=stop;E.mode.onchange=route;
-[E.az,E.el,E.dist,E.speed].forEach(x=>x.oninput=updatePos);E.orbit.onclick=toggleOrbit;E.reset.onclick=()=>{E.az.value=0;E.el.value=0;E.dist.value=2;updatePos()};
+[E.az,E.el,E.dist,E.speed].forEach(x=>x.oninput=updatePos);E.orbitType.onchange=()=>{orbitPhase=0;if(orbiting){lastOrbitTime=performance.now();applyOrbit(E.orbitType.value,orbitPhase);E.status.textContent='Órbita ativa: '+E.orbitType.options[E.orbitType.selectedIndex].text}};E.orbit.onclick=toggleOrbit;E.reset.onclick=()=>{E.az.value=0;E.el.value=0;E.dist.value=2;updatePos()};
 document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>preset(b.dataset.preset));
 updateMode();updatePos();
 
